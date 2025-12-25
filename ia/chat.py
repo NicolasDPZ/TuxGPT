@@ -1,0 +1,14 @@
+import subprocess
+
+def ask_ai(prompt):
+    try:
+        result = subprocess.run(
+            ["ollama", "run", "llama3"],
+            input=prompt + "\n",
+            text=True,
+            capture_output=True,
+            timeout=30  # evita que se quede bloqueado
+        )
+        return result.stdout.strip() if result.stdout else "No hay respuesta"
+    except subprocess.TimeoutExpired:
+        return "El modelo tardó demasiado en responder"
