@@ -34,15 +34,16 @@ if ! command -v ollama &> /dev/null; then
     fi
 fi
 
-python3 -m venv venv
-source venv/bin/activate
-
-pip install -r requirements.txt
-
+echo "comand tuxgpt..."
 mkdir -p ~/.local/bin
-cp tuxgpt ~/.local/bin/
+
+cat <<EOF > ~/.local/bin/tuxgpt
+#!/bin/bash
+source "\$HOME/TuxGPT/venv/bin/activate"
+python "\$HOME/TuxGPT/main.py"
+EOF
+
 chmod +x ~/.local/bin/tuxgpt
 
-echo "finix"
-echo "tuxgpt"
-
+echo " finix "
+echo " tuxgpt "
