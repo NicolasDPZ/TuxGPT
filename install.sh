@@ -14,6 +14,7 @@ fi
 
 echo "Distro: $DISTRO"
 
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 if ! command -v ollama >/dev/null 2>&1; then
     if [ "$DISTRO" = "debian" ]; then
@@ -28,7 +29,7 @@ if ! command -v ollama >/dev/null 2>&1; then
     fi
 fi
 
-until ollama --version &>/dev/null; do 
+until ollama --version &>/dev/null; do
   sleep 4
 done
 
@@ -40,15 +41,38 @@ else
     echo "✔ Model $MODEL already installed"
 fi
 
-python3 -m venv venv
-./venv/bin/pip install --upgrade pip
-./venv/bin/pip install -r requirements.txt
+python3 -m venv "$PROJECT_DIR/venv"
+"$PROJECT_DIR/venv/bin/pip" install --upgrade pip
+"$PROJECT_DIR/venv/bin/pip" install -r "$PROJECT_DIR/requirements.txt"
 
 mkdir -p ~/.local/bin
 
 cat <<EOF > ~/.local/bin/tuxgpt
 #!/usr/bin/env bash
-$(pwd)/venv/bin/python $(pwd)/main.py "\$@"
+PROJECT_DIR="$PROJECT_DIR"
+VENV="\$PROJECT_DIR/venv/bin/python"
+
+if [[ "\$1" == "--help" || "\$1" == "-h" ]]; then
+    echo "TuxGPT - Terminal AI powered by Ollama"
+    echo
+    echo "Usage:"
+    echo "  tuxgpt"
+    echo "  tuxgpt \"aaaa\""
+    echo "  tuxgpt --update"
+    echo
+    exit 0
+fi
+
+if [[ "\$1" == "--update" ]]; then
+    echo "Updating TuxGPT..."
+    cd "\$PROJECT_DIR" || exit 1
+    git pull
+    "\$VENV" -m pip install -r requirements.txt
+    echo "Updated"
+    exit 0
+fi
+
+exec "\$VENV" "\$PROJECT_DIR/main.py" "\$@"
 EOF
 
 chmod +x ~/.local/bin/tuxgpt
