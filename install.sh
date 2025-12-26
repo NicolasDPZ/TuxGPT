@@ -17,18 +17,17 @@ if ! command -v ollama &> /dev/null; then
     echo "not Ollama"
 
     if [ "$DISTRO" = "debian" ]; then
-    	if ! command -v curl &> /dev/null; then
-        	echo "installing curl..."
-        	sudo apt update
-        	sudo apt install -y curl
+        if ! command -v curl &> /dev/null; then
+            echo "installing curl..."
+            sudo apt update
+            sudo apt install -y curl
         fi
 
         echo "installing Ollama..."
         curl -fsSL https://ollama.com/install.sh | sh
     fi
 
-if [ "$DISTRO" = "arch" ]; then
-    if ! command -v ollama &> /dev/null; then
+    if [ "$DISTRO" = "arch" ]; then
         echo "install Ollama:"
         echo "sudo pacman -S ollama"
         exit 1
@@ -46,3 +45,4 @@ chmod +x ~/.local/bin/tuxgpt
 
 echo "finix"
 echo "tuxgpt"
+
