@@ -13,8 +13,7 @@ fi
 
 echo "Distro: $DISTRO"
 
-if ! command -v ollama &> /dev/null; then
-    echo "not Ollama"
+
 
     if [ "$DISTRO" = "debian" ]; then
         if ! command -v curl &> /dev/null; then
@@ -34,16 +33,48 @@ if ! command -v ollama &> /dev/null; then
     fi
 fi
 
-echo "comand tuxgpt..."
+
+if ! command -v ollama &> /dev/null; then
+    echo "Installing Ollama..."
+    if [ "$DISTRO" = "debian" ]; then
+        curl -fsSL https://ollama.com/install.sh | sh
+    elif [ "$DISTRO" = "arch" ]; then
+        echo "Ollama arch"
+        echo "   sudo pacman -S ollama"
+        exit 1
+    fi
+else
+    echo "Ollama installed"
+fi
+
+
+
+echo "virtual environment..."
+python3 -m venv venv
+
+echo "Python dependencies..."
+./venv/bin/pip install --upgrade pip
+./venv/bin/pip install -r requirements.txt
+
+
+
+echo "tuxgpt command..."
+
 mkdir -p ~/.local/bin
 
-cat <<EOF > ~/.local/bin/tuxgpt
-#!/bin/bash
-source "\$HOME/TuxGPT/venv/bin/activate"
-python "\$HOME/TuxGPT/main.py"
+cat > ~/.local/bin/tuxgpt <<EOF
+#!/usr/bin/env bash
+$(pwd)/venv/bin/python $(pwd)/main.py "\$@"
 EOF
 
 chmod +x ~/.local/bin/tuxgpt
+
+
+
+if ! echo "\$PATH" | grep -q ".local/bin"; then
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+    echo "ℹ Added ~/.local/bin to PATH (restart terminal)"
+fi
 
 echo " finix "
 echo " tuxgpt "
