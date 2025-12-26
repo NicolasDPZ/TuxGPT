@@ -38,7 +38,7 @@ if ! ollama list | awk '{print $1}' | grep -q "^$MODEL$"; then
     echo "⬇ Downloading model $MODEL..."
     ollama pull "$MODEL"
 else
-    echo "✔ Model $MODEL already installed"
+    echo " Model $MODEL already installed"
 fi
 
 python3 -m venv "$PROJECT_DIR/venv"
@@ -53,11 +53,10 @@ PROJECT_DIR="$PROJECT_DIR"
 VENV="\$PROJECT_DIR/venv/bin/python"
 
 if [[ "\$1" == "--help" || "\$1" == "-h" ]]; then
-    echo "TuxGPT - Terminal AI powered by Ollama"
+    echo "   TuxGPT - is a terminal ia powered by Ollama "
     echo
     echo "Usage:"
     echo "  tuxgpt"
-    echo "  tuxgpt \"aaaa\""
     echo "  tuxgpt --update"
     echo
     exit 0

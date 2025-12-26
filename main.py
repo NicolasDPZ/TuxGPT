@@ -15,6 +15,6 @@ try:
         if user.lower() == "salir":
             break
         response = ask_ai(user)
-        print("\nIA >", response, "\n")
+        print("\nIA > ", response, "\n")
 except KeyboardInterrupt:
     print("\nCerrando IA...")

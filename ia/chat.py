@@ -7,7 +7,7 @@ def ask_ai(prompt):
             input=prompt + "\n",
             text=True,
             capture_output=True,
-            timeout=45
+            timeout=60
         )
         return result.stdout.strip() if result.stdout else "No hay respuesta"
     except subprocess.TimeoutExpired:
