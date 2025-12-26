@@ -14,6 +14,7 @@ fi
 
 echo "Distro: $DISTRO"
 
+
 if ! command -v ollama >/dev/null 2>&1; then
     if [ "$DISTRO" = "debian" ]; then
         if ! command -v curl >/dev/null 2>&1; then
@@ -25,6 +26,18 @@ if ! command -v ollama >/dev/null 2>&1; then
         echo "sudo pacman -S ollama"
         exit 1
     fi
+fi
+
+until ollama --version &>/dev/null; do 
+  sleep 4
+done
+
+MODEL="llama3"
+if ! ollama list | awk '{print $1}' | grep -q "^$MODEL$"; then
+    echo "⬇ Downloading model $MODEL..."
+    ollama pull "$MODEL"
+else
+    echo "✔ Model $MODEL already installed"
 fi
 
 python3 -m venv venv
