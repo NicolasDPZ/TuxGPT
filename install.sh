@@ -81,4 +81,5 @@ if ! echo "\$PATH" | grep -q ".local/bin"; then
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 fi
 
+export PATH="$HOME/.local/bin:$PATH"
 echo "finix"
